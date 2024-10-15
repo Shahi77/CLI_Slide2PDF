@@ -18,6 +18,7 @@
   "dependencies": {
     "boxen": "^8.0.1",
     "chalk": "^5.3.0",
+    "office-to-pdf": "^4.0.0",
     "pdf-merger-js": "^5.1.2",
     "ppt-pdf": "^3.0.0",
     "yargs": "^17.7.2"

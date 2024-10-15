@@ -1,16 +1,25 @@
 import path from "path";
-import pptToPdf from "ppt-pdf";
+import fs from "fs";
+import officeToPdf from "office-to-pdf";
 import pdfMerger from "pdf-merger-js";
 
 export const convertPdf = async (pptPath) => {
   try {
-    // Output path same as input ppt directory
+    // Read the PPT file as a buffer
+    const pptBuffer = fs.readFileSync(pptPath);
+
+    // Convert to PDF
+    const pdfBuffer = await officeToPdf(pptBuffer);
+
+    // Output PDF path (same directory as input PPT)
     const outputPdfPath = path.join(
       path.dirname(pptPath),
       path.basename(pptPath, path.extname(pptPath)) + ".pdf"
     );
-    // Convert
-    await pptToPdf(pptPath, outputPdfPath);
+
+    // Write the converted PDF to the output path
+    fs.writeFileSync(outputPdfPath, pdfBuffer);
+
     return outputPdfPath;
   } catch (error) {
     throw new Error(`Error converting PPT to PDF: ${error.message}`);
@@ -20,19 +29,21 @@ export const convertPdf = async (pptPath) => {
 export const mergePdf = async (pdfFiles) => {
   try {
     const merger = new pdfMerger();
+
+    // Add each PDF file to the merger
     for (const file of pdfFiles) {
-      // Add each pdf file to merger
       merger.add(file);
     }
 
-    // Output path in the same directory as the first pdf
+    // Output path in the same directory as the first PDF
     const mergedPath = path.join(
       path.dirname(pdfFiles[0]),
       "merged_output.pdf"
     );
 
-    // Merge and save pdf
+    // Merge and save the final merged PDF
     await merger.save(mergedPath);
+
     return mergedPath;
   } catch (error) {
     throw new Error(`Error merging PDFs: ${error.message}`);
