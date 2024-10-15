@@ -1,19 +1,22 @@
-#! /usr/bin/env node
-const yargs = require("yargs");
-const chalk = require("chalk");
-const boxen = require("boxen");
-const path = require("path");
-const fs = require("fs");
+#!/usr/bin/env node
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+import chalk from "chalk";
+import boxen from "boxen";
+import path from "path";
+import fs from "fs";
+import { convertPdf, mergePdf } from "./utils.js";
 
 const usage = chalk.green(
-  "\nUsage: -c <convert> -m <merge_pdfs> \n " +
+  "\nUsage: create-pdf -c <convert> -m <merge_pdfs> \n " +
     boxen(chalk.blue("\nConvert PPT to PDF and merge PDFs\n"), {
       padding: 1,
       borderColor: "blue",
       dimBorder: true,
     })
 );
-const options = yargs
+
+const options = yargs(hideBin(process.argv))
   .usage(usage)
   .option("c", {
     alias: "convert",
@@ -23,7 +26,7 @@ const options = yargs
   })
   .option("m", {
     alias: "merge",
-    describe: "Merge multiple pdf files",
+    describe: "Merge multiple PDF files",
     type: "array",
     demandOption: false,
   })
@@ -31,9 +34,7 @@ const options = yargs
 
 const main = async () => {
   try {
-    const { convertPdf, mergePdf } = await import("./utils.js");
-
-    //Handle conversion
+    // Handle conversion
     if (options.convert) {
       const pptPath = path.resolve(options.convert);
       if (!fs.existsSync(pptPath)) {
@@ -45,7 +46,7 @@ const main = async () => {
       console.log(chalk.green(`PPT successfully converted to PDF: ${pdfPath}`));
     }
 
-    //Handle merging
+    // Handle merge
     if (options.merge) {
       const pdfFiles = options.merge.map((file) => path.resolve(file));
       pdfFiles.forEach((file) => {
@@ -64,4 +65,5 @@ const main = async () => {
     console.log(chalk.red("Error occurred:", error.message));
   }
 };
+
 main();
