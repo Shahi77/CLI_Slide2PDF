@@ -6,8 +6,8 @@ const path = require("path");
 const fs = require("fs");
 
 const usage = chalk.green(
-  "\nUsage:  -c <convert> -m <merge_pdfs> \n " +
-    boxen(chalk.blue("\nConvert PPT to PDF and merfe PDFs\n"), {
+  "\nUsage: -c <convert> -m <merge_pdfs> \n " +
+    boxen(chalk.blue("\nConvert PPT to PDF and merge PDFs\n"), {
       padding: 1,
       borderColor: "blue",
       dimBorder: true,
