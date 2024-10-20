@@ -32,7 +32,11 @@ export const mergePdf = async (pdfFiles) => {
 
     // Add each PDF file to the merger
     for (const file of pdfFiles) {
-      merger.add(file);
+      if (!fs.existsSync(file)) {
+        throw new Error(`File not found: ${file}`);
+      }
+      console.log(`Adding file: ${file}`);
+      await merger.add(file);
     }
 
     // Output path in the same directory as the first PDF
